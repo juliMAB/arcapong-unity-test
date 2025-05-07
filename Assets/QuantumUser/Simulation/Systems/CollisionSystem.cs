@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using Quantum;
 using Photon.Deterministic;
+using UnityEngine.UIElements;
 
 namespace Tomorrow.Quantum
 {
@@ -21,6 +22,7 @@ namespace Tomorrow.Quantum
                         // collide with paddles
                         if (f.Unsafe.TryGetPointer<Paddle>(info.Other, out Paddle *paddle))
                         {
+                            Debug.Log($"Ball collided with paddle {paddle->Index}");
                             var direction = FPVector3.Normalize(
                                 info.ContactNormal + 
                                 (paddle->Index == 0 ? 1 : -1) * (ballTransform->Position.X - otherTransform->Position.X) * FPVector3.Right
@@ -42,6 +44,14 @@ namespace Tomorrow.Quantum
                         if (f.Unsafe.TryGetPointer<Goal>(info.Other, out _))
                         {
                             ball->Velocity = FPVector3.Zero;
+                            f.Signals.OnScoreChanged(info.Entity, info.Other);
+                        }
+                        if (f.Unsafe.TryGetPointer<Block>(info.Other,out Block* block))
+                        {
+                            ball->Velocity = FPVector3.Reflect(ball->Velocity, info.ContactNormal);
+
+                            ball->Velocity = FPVector3.Normalize(ball->Velocity) * f.RuntimeConfig.BallSpeed;
+
                             f.Signals.OnScoreChanged(info.Entity, info.Other);
                         }
                     }

@@ -26,6 +26,9 @@ namespace Tomorrow.Quantum
             {
                 SpawnAI(f, playerCount+i);
             }
+            #region ADDED_BY_JULIAN
+            SpawnGrid(f);
+            #endregion
         }
         public void OnGameStateChanged(Frame f, GameState state)
         {
@@ -51,16 +54,39 @@ namespace Tomorrow.Quantum
                 {
                     if (f.Unsafe.TryGetPointer<Goal>(goalEntity, out Goal *goal))
                     {
-                        // update state
-                        paddle->Score += 1;
                         // respawn game
                         var game = f.Unsafe.GetPointerSingleton<Game>();
                         game->Respawn(f);
                         // delete the ball
                         f.Destroy(ballEntity);
                         // notify ui
-                        f.Events.OnScoreChanged(goal->Index, paddle->Score);
+                        #region FIXED_BY_JULIAN
+                        //for some reason the goals are inverted.
+                        bool goalHimself = paddle->Index != goal->Index;
+                        //here i dont have the other real paddle, so i preffere less 1 score.
+                        if (goalHimself)
+                        {
+                            paddle->Score -= 1;
+                        }
+                        else
+                        {
+                            paddle->Score += 1;
+                        }
+
+                        f.Events.OnScoreChanged(paddle->Index, paddle->Score);
+                        return;
+                        #endregion
                     }
+                    #region ADDED_BY_JULIAN
+                    if (f.Unsafe.TryGetPointer<Block>(goalEntity,out Block* block))
+                    {
+                        f.Destroy(goalEntity);
+
+                        paddle->Score += 1;
+
+                        f.Events.OnScoreChanged(paddle->Index, paddle->Score);
+                    }
+                    #endregion
                 }
             }
         }
@@ -125,11 +151,50 @@ namespace Tomorrow.Quantum
                     index * f.RuntimeConfig.GameSize.Y
                 );
             }
-            f.Add(paddleEntity, new Paddle(){
-                Index = index,
-                Score = 0
-            });
+            #region FIXED_BY_JULIAN
+            if (f.Unsafe.TryGetPointer<Paddle>(paddleEntity, out var paddle))
+            {
+                paddle->Index = index;
+            }
+            //this didn't work, not override an existent paddle component
+            //    f.Add(paddleEntity, new Paddle(){
+            //    Index = index,
+            //    Score = 0
+            //});
+            #endregion
             return paddleEntity;
         }
+        #region ADDED_BY_JULIAN
+        void SpawnGrid(Frame f)
+        {
+            for (int i = 0; i < f.RuntimeConfig.GridSize.X; i++)
+            {
+                for (int j = 0; j < f.RuntimeConfig.GridSize.Y; j++)
+                {
+                    var BlockEntity = SpawnBlock(f, i* f.RuntimeConfig.GridSize.Y.AsInt + j,new FPVector2(i + f.RuntimeConfig.GridOffset.X, j + f.RuntimeConfig.GridOffset.Y));
+                    var BlockGenerate = new Block();
+                    f.Add(BlockEntity, BlockGenerate);
+                }
+            }
+        }
+        EntityRef SpawnBlock(Frame f, int index,FPVector2 pos)
+        {
+            EntityRef BlockEntity = f.Create(f.RuntimeConfig.BlockPrototype);
+
+            if (f.Unsafe.TryGetPointer<Transform3D>(BlockEntity, out var transform))
+            {
+                transform->Position = new FPVector3(
+                    pos.X,
+                    0,
+                    pos.Y
+                );
+            }
+            f.Add(BlockEntity, new Block()
+            {
+                Index = index,
+            });
+            return BlockEntity;
+        }
+        #endregion
     }
 }

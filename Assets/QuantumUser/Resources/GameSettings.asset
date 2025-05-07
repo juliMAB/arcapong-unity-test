@@ -9,27 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f0fbc79295c74f3b8d3a575db2c5f65, type: 3}
+  m_Script: {fileID: 11500000, guid: 7aa6cf5011dc94537b2bd64d92b5abf4, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  Identifier:
-    Path: QuantumUser/Resources/GameSettings
-    Guid:
-      Value: 357152845866834083
-  PaddlePrototype:
-    Id:
-      Value: 1496409425384618818
-  BallPrototype:
-    Id:
-      Value: 1513133757080442825
-  PaddleSpeed:
-    RawValue: 983040
-  AIPaddleSpeed:
-    RawValue: 327680
-  BallSpeed:
-    RawValue: 196608
-  GameSize:
-    X:
-      RawValue: 1310720
-    Y:
-      RawValue: 655360

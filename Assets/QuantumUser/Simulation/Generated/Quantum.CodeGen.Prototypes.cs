@@ -71,6 +71,25 @@ namespace Quantum.Prototypes {
     }
   }
   [System.SerializableAttribute()]
+  [Quantum.Prototypes.Prototype(typeof(Quantum.Block))]
+  public unsafe class BlockPrototype : ComponentPrototype<Quantum.Block> {
+    public FPVector3 Position;
+    public MapEntityId Paddle;
+    public Int32 Index;
+    public QBoolean IsHit;
+    public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
+        Quantum.Block component = default;
+        Materialize((Frame)f, ref component, in context);
+        return f.Set(entity, component) == SetResult.ComponentAdded;
+    }
+    public void Materialize(Frame frame, ref Quantum.Block result, in PrototypeMaterializationContext context = default) {
+        result.Position = this.Position;
+        PrototypeValidator.FindMapEntity(this.Paddle, in context, out result.Paddle);
+        result.Index = this.Index;
+        result.IsHit = this.IsHit;
+    }
+  }
+  [System.SerializableAttribute()]
   [Quantum.Prototypes.Prototype(typeof(Quantum.Game))]
   public unsafe partial class GamePrototype : ComponentPrototype<Quantum.Game> {
     [HideInInspector()]

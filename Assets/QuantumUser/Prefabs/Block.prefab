@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8946421684197714113}
   - component: {fileID: 4894845978478166121}
   - component: {fileID: -6277696394443338395}
-  - component: {fileID: -7136439932154281368}
+  - component: {fileID: 2042856035998732058}
   m_Layer: 0
-  m_Name: Ball
+  m_Name: Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 976739994482301213}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &8946421684197714113
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -181,7 +181,7 @@ MonoBehaviour:
     CallbackFlags:
       Value: 2
   PhysicsBody:
-    IsEnabled: 1
+    IsEnabled: 0
     Config2D: 116
     Config3D: 58
     RotationFreeze: 0
@@ -349,7 +349,7 @@ MonoBehaviour:
   OnEntityDestroyed:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-7136439932154281368
+--- !u!114 &2042856035998732058
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -358,11 +358,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 976739994482301213}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ab64f0131c994b728d38a0b23190481, type: 3}
+  m_Script: {fileID: 11500000, guid: 13a944406189602498b7e015b728c513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Prototype:
-    Velocity:
+    Position:
       X:
         RawValue: 0
       Y:
@@ -370,3 +370,6 @@ MonoBehaviour:
       Z:
         RawValue: 0
     Paddle: {fileID: 0}
+    Index: 0
+    IsHit:
+      Value: 0

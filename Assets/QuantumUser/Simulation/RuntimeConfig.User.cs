@@ -8,6 +8,7 @@ namespace Quantum
     {
         public AssetRef<EntityPrototype> PaddlePrototype;
         public AssetRef<EntityPrototype> BallPrototype;
+        public AssetRef<EntityPrototype> BlockPrototype;
         public FP PaddleSpeed;
         public FP AIPaddleSpeed;
         public FP BallSpeed;
@@ -16,5 +17,7 @@ namespace Quantum
         public int CountdownTime;
         public int GameTime;
         public int FinishedTime;
+        public FPVector2 GridSize;
+        public FPVector2 GridOffset;
     }
 }

@@ -1121,6 +1121,9 @@ MonoBehaviour:
     BallPrototype:
       Id:
         Value: 1513133757080442825
+    BlockPrototype:
+      Id:
+        Value: 1379822768883290046
     PaddleSpeed:
       RawValue: 1179648
     AIPaddleSpeed:
@@ -1136,6 +1139,16 @@ MonoBehaviour:
     CountdownTime: 3
     GameTime: 30
     FinishedTime: 5
+    GridSize:
+      X:
+        RawValue: 196608
+      Y:
+        RawValue: 196608
+    GridOffset:
+      X:
+        RawValue: 367002
+      Y:
+        RawValue: 327680
   UseRandomSeed: 0
   SessionConfig: {fileID: 11400000, guid: ddced9348c7694940b05d96b4da144d6, type: 2}
   LocalPlayers:
@@ -2167,7 +2180,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1523052175}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee60dcd1dfaa0466fb1e5a458c9eea95, type: 3}
   m_Name: 

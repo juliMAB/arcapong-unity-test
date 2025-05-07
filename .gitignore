@@ -4,3 +4,6 @@ UserSettings
 Logs
 Build
 .DS_Store
+.vs
+*.csproj
+.vsconfig

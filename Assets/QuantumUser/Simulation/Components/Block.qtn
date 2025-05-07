@@ -1,0 +1,6 @@
+component Block {
+    FPVector3 Position;
+    entity_ref Paddle;   // the last paddle that touched the ball
+    Int32 Index;
+    QBoolean IsHit;
+}
