@@ -1127,7 +1127,7 @@ MonoBehaviour:
     PaddleSpeed:
       RawValue: 1179648
     AIPaddleSpeed:
-      RawValue: 327680
+      RawValue: 1966080
     BallSpeed:
       RawValue: 196608
     GameSize:
@@ -1149,6 +1149,9 @@ MonoBehaviour:
         RawValue: 367002
       Y:
         RawValue: 327680
+    aIConfig:
+      Id:
+        Value: 330617407061311010
   UseRandomSeed: 0
   SessionConfig: {fileID: 11400000, guid: ddced9348c7694940b05d96b4da144d6, type: 2}
   LocalPlayers:

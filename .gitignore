@@ -7,3 +7,4 @@ Build
 .vs
 *.csproj
 .vsconfig
+*.cache

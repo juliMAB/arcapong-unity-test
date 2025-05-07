@@ -19,5 +19,6 @@ namespace Quantum
         public int FinishedTime;
         public FPVector2 GridSize;
         public FPVector2 GridOffset;
+        public AssetRef<AIConfig> aIConfig;
     }
 }

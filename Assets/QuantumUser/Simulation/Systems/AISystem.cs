@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using Quantum;
 using Photon.Deterministic;
+using Photon.Deterministic.Protocol;
 
 namespace Tomorrow.Quantum
 {
@@ -16,26 +17,69 @@ namespace Tomorrow.Quantum
             public PlayerAI* ai;
         }
 
+        // Referencia a la configuración
+
         public override void Update(Frame f, ref Filter filter)
         {
+            AIConfig config = f.FindAsset<AIConfig>(f.RuntimeConfig.aIConfig.Id);
+            if (config == null)
+            {
+                Debug.Log("ERROR!"); return;
+            }
             foreach (var pair in f.GetComponentIterator<Ball>())
             {
-                if(f.Unsafe.TryGetPointer<Transform3D>(pair.Entity, out Transform3D *ball))
+                if (f.Unsafe.TryGetPointer<Transform3D>(pair.Entity, out Transform3D* ball))
                 {
-                    if(ball->Position.X - filter.Paddle->Position.X < FP._0_05)
+                    // Predicción de posición
+                    FP targetPositionX = ball->Position.X;
+                    if (f.Unsafe.TryGetPointer<PhysicsBody3D>(pair.Entity, out var ballBody))
                     {
-                        // move left
-                        filter.Body->Velocity = f.RuntimeConfig.AIPaddleSpeed * FPVector3.Left;
+                        targetPositionX += ballBody->Velocity.X * config.PredictionTime;
                     }
-                    else if(ball->Position.X - filter.Paddle->Position.X> FP._0_05)
+
+                    FP currentPositionX = filter.Paddle->Position.X;
+                    FP positionDifference = targetPositionX - currentPositionX;
+                    FP absoluteDifference = FPMath.Abs(positionDifference);
+
+                    // Comportamiento basado en distancia
+                    FP effectiveAcceleration = config.AccelerationFactor;
+                    FP effectiveSpeedMultiplier = config.BaseSpeedMultiplier;
+
+                    foreach (var behavior in config.DistanceBehaviors)
                     {
-                        // move right
-                        filter.Body->Velocity = f.RuntimeConfig.AIPaddleSpeed * FPVector3.Right;
+                        if (absoluteDifference > behavior.Distance)
+                        {
+                            effectiveAcceleration = behavior.Acceleration;
+                            effectiveSpeedMultiplier = behavior.SpeedMultiplier;
+                            break;
+                        }
+                    }
+
+                    // Movimiento
+                    if (absoluteDifference > config.DeadZone)
+                    {
+                        FP direction = positionDifference > FP._0 ? FP._1 : -FP._1;
+                        FP speedMultiplier = FPMath.Clamp(
+                            absoluteDifference * FP._2,
+                            effectiveSpeedMultiplier,
+                            config.MaxSpeedMultiplier * effectiveSpeedMultiplier
+                        );
+
+                        FP targetVelocity = f.RuntimeConfig.AIPaddleSpeed * speedMultiplier * direction;
+
+                        filter.Body->Velocity = FPVector3.MoveTowards(
+                            filter.Body->Velocity,
+                            new FPVector3(targetVelocity, FP._0, FP._0),
+                            effectiveAcceleration * f.DeltaTime * f.RuntimeConfig.AIPaddleSpeed
+                        );
                     }
                     else
                     {
-                        // not move
-                        filter.Body->Velocity = FPVector3.Zero;
+                        filter.Body->Velocity = FPVector3.MoveTowards(
+                            filter.Body->Velocity,
+                            FPVector3.Zero,
+                            effectiveAcceleration * 2 * f.DeltaTime * f.RuntimeConfig.AIPaddleSpeed
+                        );
                     }
                 }
             }

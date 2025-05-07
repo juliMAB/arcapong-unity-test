@@ -322,7 +322,9 @@ MonoBehaviour:
     CommitCommandsMode: 0
     DefaultEntityCapacity: 1024
     DefaultComponentBlockCapacity: 128
-    ComponentTypeConfiguration: []
+    ComponentTypeConfiguration:
+    - Name: 
+      ComponentBlockCapacity: 0
   Physics:
     Gravity:
       X:
