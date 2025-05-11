@@ -338,6 +338,10 @@ namespace Quantum {
   public unsafe interface ISignalOnBlockBreak : ISignal {
     void OnBlockBreak(Frame f, EntityRef block, EntityRef ball);
   }
+
+  public unsafe interface ISignalOnUpdateTimePowerUp : ISignal {
+    void OnUpdateTimeRemain(Frame f, int playerIndex, int remainTime);
+  }
 }
 
 #endregion
@@ -501,6 +505,7 @@ namespace Quantum {
     ISignalOnPlayerDisconnected[] _ISignalOnPlayerDisconnectedSystems;
 
     ISignalOnBlockBreak[] _ISignalOnBlockBreakSystems;
+    ISignalOnUpdateTimePowerUp[] _ISignalOnUpdateTimePowerUpSystems;
 
     /// <summary>
     /// Access the global read and write struct with generated variables by the Quantum DSL compiler.
@@ -739,6 +744,8 @@ namespace Quantum {
       _ISignalOnMapChangedSystems = BuildSignalsArray<ISignalOnMapChanged>();
 
       _ISignalOnBlockBreakSystems = BuildSignalsArray<ISignalOnBlockBreak>();
+
+      _ISignalOnUpdateTimePowerUpSystems = BuildSignalsArray<ISignalOnUpdateTimePowerUp>();
 
       // prototype materialized signal
       _ISignalOnEntityPrototypeMaterializedSystems = BuildSignalsArray<ISignalOnEntityPrototypeMaterialized>();
@@ -1977,6 +1984,16 @@ namespace Quantum {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
             s.OnBlockBreak(_f, block, ball);
+          }
+        }
+      }
+      /// <inheritdoc cref="ISignalOnUpdateTimePowerUp.OnUpdateTimeRemain(Frame, int, int)"/>
+      public void OnUpdateTimeRemain(int index, int time) {
+        var array = _f._ISignalOnUpdateTimePowerUpSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.OnUpdateTimeRemain(_f, index, time);
           }
         }
       }

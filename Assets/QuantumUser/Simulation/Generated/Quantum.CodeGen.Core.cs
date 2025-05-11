@@ -769,20 +769,32 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct Paddle : Quantum.IComponent {
-    public const Int32 SIZE = 16;
+    public const Int32 SIZE = 48;
     public const Int32 ALIGNMENT = 8;
     [FieldOffset(0)]
     public Int32 Index;
     [FieldOffset(4)]
     public Int32 Score;
-    [FieldOffset(8)]
+    [FieldOffset(32)]
     public FP Velocity;
+    [FieldOffset(40)]
+    public FP VelocityMultiplier;
+    [FieldOffset(16)]
+    public FP BaseSize;
+    [FieldOffset(24)]
+    public FP SizeMultiplier;
+    [FieldOffset(8)]
+    public AssetRef<PowerUpBase> PowerUp;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 10093;
         hash = hash * 31 + Index.GetHashCode();
         hash = hash * 31 + Score.GetHashCode();
         hash = hash * 31 + Velocity.GetHashCode();
+        hash = hash * 31 + VelocityMultiplier.GetHashCode();
+        hash = hash * 31 + BaseSize.GetHashCode();
+        hash = hash * 31 + SizeMultiplier.GetHashCode();
+        hash = hash * 31 + PowerUp.GetHashCode();
         return hash;
       }
     }
@@ -790,7 +802,11 @@ namespace Quantum {
         var p = (Paddle*)ptr;
         serializer.Stream.Serialize(&p->Index);
         serializer.Stream.Serialize(&p->Score);
+        AssetRef.Serialize(&p->PowerUp, serializer);
+        FP.Serialize(&p->BaseSize, serializer);
+        FP.Serialize(&p->SizeMultiplier, serializer);
         FP.Serialize(&p->Velocity, serializer);
+        FP.Serialize(&p->VelocityMultiplier, serializer);
     }
   }
   [StructLayout(LayoutKind.Explicit)]
@@ -834,19 +850,23 @@ namespace Quantum {
   }
   [StructLayout(LayoutKind.Explicit)]
   public unsafe partial struct PowerUP : Quantum.IComponent {
-    public const Int32 SIZE = 24;
+    public const Int32 SIZE = 32;
     public const Int32 ALIGNMENT = 8;
-    [FieldOffset(0)]
+    [FieldOffset(8)]
     public FPVector3 Velocity;
+    [FieldOffset(0)]
+    public AssetRef<PowerUpBase> poweUpType;
     public override Int32 GetHashCode() {
       unchecked { 
         var hash = 8191;
         hash = hash * 31 + Velocity.GetHashCode();
+        hash = hash * 31 + poweUpType.GetHashCode();
         return hash;
       }
     }
     public static void Serialize(void* ptr, FrameSerializer serializer) {
         var p = (PowerUP*)ptr;
+        AssetRef.Serialize(&p->poweUpType, serializer);
         FPVector3.Serialize(&p->Velocity, serializer);
     }
   }

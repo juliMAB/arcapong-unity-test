@@ -366,3 +366,12 @@ MonoBehaviour:
     Score: 0
     Velocity:
       RawValue: 0
+    VelocityMultiplier:
+      RawValue: 65536
+    BaseSize:
+      RawValue: 0
+    SizeMultiplier:
+      RawValue: 0
+    PowerUp:
+      Id:
+        Value: 0

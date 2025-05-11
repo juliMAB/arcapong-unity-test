@@ -1,4 +1,5 @@
 component PowerUP
 {
 	FPVector3 Velocity;
+	 AssetRef<PowerUpBase> poweUpType;
 }

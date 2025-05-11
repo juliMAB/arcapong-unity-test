@@ -25,7 +25,7 @@ struct StateObjectPair
     public GameObject Object;
 }
 
-public unsafe class GameUIController : QuantumCallbacks
+public unsafe class GameUIController : QuantumCallbacks, ISignalOnUpdateTimePowerUp
 {
     [SerializeField] private List<StateObjectPair> _stateObjectPairs = new();
     private Dictionary<UIState, GameObject> _stateObjectDictionary = new();
@@ -39,10 +39,13 @@ public unsafe class GameUIController : QuantumCallbacks
     [Header("Playing")]
     [SerializeField] private TextMeshProUGUI _timeLeftText;
     [SerializeField] private TextMeshProUGUI[] _scoreTexts;
+    [SerializeField] private TextMeshProUGUI[] _timeLeftPowerUpText;
 
     private UIState _currentUIState = UIState.Waiting;
 
     private QuantumGame _game;
+
+    public int RuntimeIndex => throw new NotImplementedException();
 
     public override void OnUnitySceneLoadDone(QuantumGame game)
     {
@@ -157,4 +160,13 @@ public unsafe class GameUIController : QuantumCallbacks
         _countdownTimer.text = FPMath.CeilToInt(time).ToString();
     }
 
+    private void UpdateTimePowerUp(int playerIndex,FP remainTimePowerUp)
+    {
+        _timeLeftPowerUpText[playerIndex].text = remainTimePowerUp.ToString();
+    }
+
+    public void OnUpdateTimeRemain(Frame f, int playerIndex, int remainTime)
+    {
+        UpdateTimePowerUp(playerIndex, remainTime);
+    }
 }

@@ -36,9 +36,6 @@ namespace Tomorrow.Quantum
       
         public void OnCollisionEnter3D(Frame f, CollisionInfo3D info)
         {
-            
-
-
             if (f.Unsafe.TryGetPointer<Ball>(info.Entity, out Ball *ball))
             {
                 if (f.Unsafe.TryGetPointer<Transform3D>(info.Entity, out Transform3D *ballTransform))
@@ -88,9 +85,13 @@ namespace Tomorrow.Quantum
 
             else if ((f.Unsafe.TryGetPointer<Paddle>(info.Entity, out Paddle* padleA)) && (f.Unsafe.TryGetPointer<PowerUP>(info.Other, out PowerUP* powerUp)))
             {
-                Debug.Log("GetPowerUP");
-                f.Destroy(info.Other);
-                //applyPowerUP
+                if(f.TryFindAsset<PowerUpBase>(powerUp->poweUpType.Id, out var powerUpAsset))
+                {
+                    Debug.Log("GetPowerUP");
+                    f.Destroy(info.Other);
+                    padleA->PowerUp = powerUpAsset;
+                    powerUpAsset.InitPowerUp(f,info.Entity,padleA);
+                }
             }
         }
     }

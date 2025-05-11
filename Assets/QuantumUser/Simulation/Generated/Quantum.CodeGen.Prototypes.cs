@@ -137,6 +137,10 @@ namespace Quantum.Prototypes {
     public Int32 Index;
     public Int32 Score;
     public FP Velocity;
+    public FP VelocityMultiplier;
+    public FP BaseSize;
+    public FP SizeMultiplier;
+    public AssetRef<PowerUpBase> PowerUp;
     partial void MaterializeUser(Frame frame, ref Quantum.Paddle result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.Paddle component = default;
@@ -147,6 +151,10 @@ namespace Quantum.Prototypes {
         result.Index = this.Index;
         result.Score = this.Score;
         result.Velocity = this.Velocity;
+        result.VelocityMultiplier = this.VelocityMultiplier;
+        result.BaseSize = this.BaseSize;
+        result.SizeMultiplier = this.SizeMultiplier;
+        result.PowerUp = this.PowerUp;
         MaterializeUser(frame, ref result, in context);
     }
   }
@@ -184,6 +192,7 @@ namespace Quantum.Prototypes {
   [Quantum.Prototypes.Prototype(typeof(Quantum.PowerUP))]
   public unsafe partial class PowerUPPrototype : ComponentPrototype<Quantum.PowerUP> {
     public FPVector3 Velocity;
+    public AssetRef<PowerUpBase> poweUpType;
     partial void MaterializeUser(Frame frame, ref Quantum.PowerUP result, in PrototypeMaterializationContext context);
     public override Boolean AddToEntity(FrameBase f, EntityRef entity, in PrototypeMaterializationContext context) {
         Quantum.PowerUP component = default;
@@ -192,6 +201,7 @@ namespace Quantum.Prototypes {
     }
     public void Materialize(Frame frame, ref Quantum.PowerUP result, in PrototypeMaterializationContext context = default) {
         result.Velocity = this.Velocity;
+        result.poweUpType = this.poweUpType;
         MaterializeUser(frame, ref result, in context);
     }
   }

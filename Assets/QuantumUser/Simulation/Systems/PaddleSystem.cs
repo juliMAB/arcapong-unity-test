@@ -25,7 +25,18 @@ namespace Tomorrow.Quantum
             // TODO: this is executed for remote players too?
             Input* input = f.GetPlayerInput(filter.PlayerLink->Player);
             // move local paddle
-            filter.Body->Velocity = f.RuntimeConfig.PaddleSpeed * input->Direction * FPVector3.Right;
+            FP speedMultiplier = 1;
+            if (f.Unsafe.TryGetPointer<Paddle>(filter.Entity, out Paddle* paddle))
+            {
+                if (paddle->PowerUp != null)
+                {
+                    if (f.TryFindAsset<PowerUpBase>(paddle->PowerUp.Id, out var powerUpAsset))
+                    {
+                        powerUpAsset.UpdatePowerUp(f.DeltaTime,f.Signals.OnUpdateTimeRemain);
+                    }
+                }
+                filter.Body->Velocity = f.RuntimeConfig.PaddleSpeed * input->Direction * FPVector3.Right * paddle->VelocityMultiplier;
+            }
 
             // set player ready
             if(f.GetPlayerInput(filter.PlayerLink->Player)->Ready.WasPressed)
@@ -35,4 +46,3 @@ namespace Tomorrow.Quantum
         }
     }
 }
-

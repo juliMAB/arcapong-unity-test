@@ -2,4 +2,8 @@ component Paddle{
     Int32 Index;
     Int32 Score;
     FP Velocity;
-}
+    FP VelocityMultiplier;
+    FP BaseSize;
+    FP SizeMultiplier;
+    AssetRef<PowerUpBase> PowerUp;
+    }

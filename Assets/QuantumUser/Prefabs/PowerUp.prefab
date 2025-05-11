@@ -369,3 +369,6 @@ MonoBehaviour:
         RawValue: 0
       Z:
         RawValue: 0
+    poweUpType:
+      Id:
+        Value: 296727742755930685
