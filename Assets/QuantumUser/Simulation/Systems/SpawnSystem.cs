@@ -197,6 +197,8 @@ namespace Tomorrow.Quantum
         public void OnBlockBreak(Frame f, EntityRef block, EntityRef ball)
         {
             Debug.Log("TryBlockBreack");
+            bool SpawnPowrUP = (f.RNG->Next(FP._0, FP._1) < FP._0_25);
+
             bool isBall0 = (f.Unsafe.TryGetPointer<Ball>(ball, out Ball* ballComp));
 
             bool isBlock0 = (f.Unsafe.TryGetPointer<Block>(block, out Block* blockComp));
@@ -206,18 +208,24 @@ namespace Tomorrow.Quantum
                 Debug.Log("BlockBreack");
 
                 bool isPaddle0 = (f.Unsafe.TryGetPointer<Paddle>(ballComp->Paddle, out Paddle* paddleLastHit));
-                EntityRef PowerUpEntity = f.Create(f.RuntimeConfig.PowerUpPrototype);
-                PowerUP* powerUp = f.Unsafe.GetPointer<PowerUP>(PowerUpEntity);
-                Transform3D* transform = f.Unsafe.GetPointer<Transform3D>(PowerUpEntity);
-                Transform3D* transformBlock = f.Unsafe.GetPointer<Transform3D>(block);
-                PhysicsBody3D* body = f.Unsafe.GetPointer<PhysicsBody3D>(PowerUpEntity);
 
-                transform->Position = new FPVector3(
-                    transformBlock->Position.X,
-                    0,
-                    transformBlock->Position.Z
-                );
-                body->AddForce(new FPVector3(0,0,paddleLastHit->Index == 0 ? -1 : 1 ) * 1000);
+                if(SpawnPowrUP)
+                {
+                    EntityRef PowerUpEntity = f.Create(f.RuntimeConfig.PowerUpPrototype);
+
+                    PowerUP* powerUp = f.Unsafe.GetPointer<PowerUP>(PowerUpEntity);
+                    Transform3D* transform = f.Unsafe.GetPointer<Transform3D>(PowerUpEntity);
+                    Transform3D* transformBlock = f.Unsafe.GetPointer<Transform3D>(block);
+                    PhysicsBody3D* body = f.Unsafe.GetPointer<PhysicsBody3D>(PowerUpEntity);
+
+                    transform->Position = new FPVector3(
+                        transformBlock->Position.X,
+                        0,
+                        transformBlock->Position.Z
+                    );
+                    body->AddForce(new FPVector3(0,0,paddleLastHit->Index == 0 ? -1 : 1 ) * 1000);
+                }
+
                 f.Destroy(block);
             }
         }
