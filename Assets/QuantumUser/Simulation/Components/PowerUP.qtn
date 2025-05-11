@@ -1,0 +1,4 @@
+component PowerUP
+{
+	FPVector3 Velocity;
+}

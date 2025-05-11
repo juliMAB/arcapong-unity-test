@@ -1124,6 +1124,9 @@ MonoBehaviour:
     BlockPrototype:
       Id:
         Value: 1379822768883290046
+    PowerUpPrototype:
+      Id:
+        Value: 1446151696369529453
     PaddleSpeed:
       RawValue: 1179648
     AIPaddleSpeed:

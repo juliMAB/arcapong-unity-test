@@ -334,6 +334,10 @@ namespace Quantum {
     /// \ingroup Physics3dApi
     void OnTriggerExit3D(Frame f, ExitInfo3D info);
   }
+
+  public unsafe interface ISignalOnBlockBreak : ISignal {
+    void OnBlockBreak(Frame f, EntityRef block, EntityRef ball);
+  }
 }
 
 #endregion
@@ -495,6 +499,8 @@ namespace Quantum {
 
     ISignalOnPlayerConnected[]    _ISignalOnPlayerConnectedSystems;
     ISignalOnPlayerDisconnected[] _ISignalOnPlayerDisconnectedSystems;
+
+    ISignalOnBlockBreak[] _ISignalOnBlockBreakSystems;
 
     /// <summary>
     /// Access the global read and write struct with generated variables by the Quantum DSL compiler.
@@ -731,6 +737,8 @@ namespace Quantum {
 
       // map changed signal
       _ISignalOnMapChangedSystems = BuildSignalsArray<ISignalOnMapChanged>();
+
+      _ISignalOnBlockBreakSystems = BuildSignalsArray<ISignalOnBlockBreak>();
 
       // prototype materialized signal
       _ISignalOnEntityPrototypeMaterializedSystems = BuildSignalsArray<ISignalOnEntityPrototypeMaterialized>();
@@ -1959,6 +1967,16 @@ namespace Quantum {
           var s = array[i];
           if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
             s.OnTriggerExit3D(_f, info);
+          }
+        }
+      }
+      /// <inheritdoc cref="ISignalOnBlockBreak.OnBlockBreak(Frame, EntityRef, EntityRef)"/>
+      public void OnBlockBreak(EntityRef block, EntityRef ball) {
+        var array = _f._ISignalOnBlockBreakSystems;
+        for (Int32 i = 0; i < array.Length; ++i) {
+          var s = array[i];
+          if (_f.SystemIsEnabledInHierarchy((SystemBase)s)) {
+            s.OnBlockBreak(_f, block, ball);
           }
         }
       }

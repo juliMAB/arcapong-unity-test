@@ -2,16 +2,42 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using Quantum;
 using Photon.Deterministic;
-using UnityEngine.UIElements;
 
 namespace Tomorrow.Quantum
 {
     [Preserve]
-    public unsafe class CollisionSystem : SystemSignalsOnly, ISignalOnCollisionEnter3D
+    public unsafe class CollisionSystem : SystemSignalsOnly, ISignalOnCollisionEnter3D, ISignalOnTriggerEnter3D
     {
+        public void OnTriggerEnter3D(Frame f, TriggerInfo3D info)
+        {
+            if (f.Unsafe.TryGetPointer<Ball>(info.Entity, out Ball* ball))
+            {
+                if (f.Unsafe.TryGetPointer<Transform3D>(info.Entity, out Transform3D* ballTransform))
+                {
+                    if (f.Unsafe.TryGetPointer<Transform3D>(info.Other, out Transform3D* otherTransform))
+                    {
+                        if (f.Unsafe.TryGetPointer<Block>(info.Other, out Block* block))
+                        {
+                            FPVector3 direction = (ballTransform->Position - otherTransform->Position).Normalized;
+
+                            ball->Velocity = FPVector3.Reflect(ball->Velocity, direction);
+
+                            ball->Velocity = FPVector3.Normalize(ball->Velocity) * f.RuntimeConfig.BallSpeed;
+
+                            f.Signals.OnScoreChanged(info.Entity, info.Other);
+
+                            f.Signals.OnBlockBreak(info.Other, info.Entity);
+                        }
+                    }
+                }
+            }
+        }
+    
+      
         public void OnCollisionEnter3D(Frame f, CollisionInfo3D info)
         {
-            // if(!f.IsVerified) return;
+            
+
 
             if (f.Unsafe.TryGetPointer<Ball>(info.Entity, out Ball *ball))
             {
@@ -46,16 +72,25 @@ namespace Tomorrow.Quantum
                             ball->Velocity = FPVector3.Zero;
                             f.Signals.OnScoreChanged(info.Entity, info.Other);
                         }
-                        if (f.Unsafe.TryGetPointer<Block>(info.Other,out Block* block))
-                        {
-                            ball->Velocity = FPVector3.Reflect(ball->Velocity, info.ContactNormal);
+                        //if (f.Unsafe.TryGetPointer<Block>(info.Other,out Block* block))
+                        //{
+                        //    ball->Velocity = FPVector3.Reflect(ball->Velocity, info.ContactNormal);
 
-                            ball->Velocity = FPVector3.Normalize(ball->Velocity) * f.RuntimeConfig.BallSpeed;
+                        //    ball->Velocity = FPVector3.Normalize(ball->Velocity) * f.RuntimeConfig.BallSpeed;
 
-                            f.Signals.OnScoreChanged(info.Entity, info.Other);
-                        }
+                        //    f.Signals.OnScoreChanged(info.Entity, info.Other);
+
+                        //    f.Signals.OnBlockBreak(info.Entity, info.Other);
+                        //}
                     }
                 }
+            }
+
+            else if ((f.Unsafe.TryGetPointer<Paddle>(info.Entity, out Paddle* padleA)) && (f.Unsafe.TryGetPointer<PowerUP>(info.Other, out PowerUP* powerUp)))
+            {
+                Debug.Log("GetPowerUP");
+                f.Destroy(info.Other);
+                //applyPowerUP
             }
         }
     }

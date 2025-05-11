@@ -22,10 +22,7 @@ namespace Tomorrow.Quantum
         public override void Update(Frame f, ref Filter filter)
         {
             AIConfig config = f.FindAsset<AIConfig>(f.RuntimeConfig.aIConfig.Id);
-            if (config == null)
-            {
-                Debug.Log("ERROR!"); return;
-            }
+
             foreach (var pair in f.GetComponentIterator<Ball>())
             {
                 if (f.Unsafe.TryGetPointer<Transform3D>(pair.Entity, out Transform3D* ball))

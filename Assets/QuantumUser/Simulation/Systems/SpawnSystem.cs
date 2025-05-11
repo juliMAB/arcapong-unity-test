@@ -7,7 +7,7 @@ namespace Tomorrow.Quantum
 {
     [Preserve]
     public unsafe class SpawnSystem : SystemSignalsOnly, 
-        ISignalOnPlayerAdded, ISignalOnGameStateChanged, ISignalOnScoreChanged, ISignalOnGameStarted, ISignalOnGameOver
+        ISignalOnPlayerAdded, ISignalOnGameStateChanged, ISignalOnScoreChanged, ISignalOnGameStarted, ISignalOnGameOver , ISignalOnBlockBreak
     {
         public void OnPlayerAdded(Frame f, PlayerRef player, bool firstTime)
         {
@@ -80,8 +80,6 @@ namespace Tomorrow.Quantum
                     #region ADDED_BY_JULIAN
                     if (f.Unsafe.TryGetPointer<Block>(goalEntity,out Block* block))
                     {
-                        f.Destroy(goalEntity);
-
                         paddle->Score += 1;
 
                         f.Events.OnScoreChanged(paddle->Index, paddle->Score);
@@ -194,6 +192,34 @@ namespace Tomorrow.Quantum
                 Index = index,
             });
             return BlockEntity;
+        }
+
+        public void OnBlockBreak(Frame f, EntityRef block, EntityRef ball)
+        {
+            Debug.Log("TryBlockBreack");
+            bool isBall0 = (f.Unsafe.TryGetPointer<Ball>(ball, out Ball* ballComp));
+
+            bool isBlock0 = (f.Unsafe.TryGetPointer<Block>(block, out Block* blockComp));
+
+            if ((isBall0) && (isBlock0))
+            {
+                Debug.Log("BlockBreack");
+
+                bool isPaddle0 = (f.Unsafe.TryGetPointer<Paddle>(ballComp->Paddle, out Paddle* paddleLastHit));
+                EntityRef PowerUpEntity = f.Create(f.RuntimeConfig.PowerUpPrototype);
+                PowerUP* powerUp = f.Unsafe.GetPointer<PowerUP>(PowerUpEntity);
+                Transform3D* transform = f.Unsafe.GetPointer<Transform3D>(PowerUpEntity);
+                Transform3D* transformBlock = f.Unsafe.GetPointer<Transform3D>(block);
+                PhysicsBody3D* body = f.Unsafe.GetPointer<PhysicsBody3D>(PowerUpEntity);
+
+                transform->Position = new FPVector3(
+                    transformBlock->Position.X,
+                    0,
+                    transformBlock->Position.Z
+                );
+                body->AddForce(new FPVector3(0,0,paddleLastHit->Index == 0 ? -1 : 1 ) * 1000);
+                f.Destroy(block);
+            }
         }
         #endregion
     }

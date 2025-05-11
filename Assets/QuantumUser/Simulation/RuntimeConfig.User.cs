@@ -9,6 +9,7 @@ namespace Quantum
         public AssetRef<EntityPrototype> PaddlePrototype;
         public AssetRef<EntityPrototype> BallPrototype;
         public AssetRef<EntityPrototype> BlockPrototype;
+        public AssetRef<EntityPrototype> PowerUpPrototype;
         public FP PaddleSpeed;
         public FP AIPaddleSpeed;
         public FP BallSpeed;
