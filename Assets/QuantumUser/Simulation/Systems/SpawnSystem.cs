@@ -197,7 +197,7 @@ namespace Tomorrow.Quantum
         public void OnBlockBreak(Frame f, EntityRef block, EntityRef ball)
         {
             Debug.Log("TryBlockBreack");
-            bool SpawnPowrUP = (f.RNG->Next(FP._0, FP._1) < FP._0_25);
+            bool SpawnPowrUP = (f.RNG->Next(FP._0, FP._1) < FP._0_20);
 
             bool isBall0 = (f.Unsafe.TryGetPointer<Ball>(ball, out Ball* ballComp));
 
