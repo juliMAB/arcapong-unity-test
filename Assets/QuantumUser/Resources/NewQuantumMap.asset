@@ -19,8 +19,8 @@ MonoBehaviour:
   UserAsset:
     Id:
       Value: 0
-  Scene: Level
-  ScenePath: Assets/QuantumUser/Scenes/Level.unity
+  Scene: ArcapongComplete
+  ScenePath: Assets/QuantumUser/Scenes/ArcapongComplete.unity
   SceneGuid: 7a4e7c09ed6ef4d41b83ce496b653424
   WorldSize: 256
   BucketsCount: 16

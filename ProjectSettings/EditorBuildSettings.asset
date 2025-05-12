@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Photon/QuantumMenu/QuantumSampleMenu.unity
     guid: f23d3edd333e1dc449a4688e04123759
   - enabled: 1
-    path: Assets/QuantumUser/Scenes/Level.unity
+    path: Assets/QuantumUser/Scenes/ArcapongComplete.unity
     guid: 7a4e7c09ed6ef4d41b83ce496b653424
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
